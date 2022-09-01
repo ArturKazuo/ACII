@@ -6,7 +6,7 @@ import java.io.File;
 
 public class Interpretador {
 
-    static String str="";
+    static String str="XXX";
 
     public static boolean isFim(String string){
         return(!(string.length() == 4 && string.charAt(0) == 'f' && string.charAt(1) == 'i' && string.charAt(2) == 'm' && string.charAt(3) == '.'));
@@ -14,10 +14,10 @@ public class Interpretador {
 
     public static void main(String []args){
         FileReader arq;
-        FileWriter arq2;
+        FileWriter arq2 = null;
         File arqW;
         BufferedReader br;
-        BufferedWriter br2;
+        BufferedWriter br2 = null;
         String string;
         
 
@@ -26,22 +26,34 @@ public class Interpretador {
             br = new BufferedReader(arq);
 
             arqW = new File("testeula.hex");
-            arqW.createNewFile();
+            if(!arqW.exists()){
+                arqW.createNewFile();
+            }
 
             arq2 = new FileWriter(arqW);
             br2 = new BufferedWriter(arq2);
+
+            br.readLine();
 
             while(isFim(string = br.readLine())){
                 try{
                     str = interpretar(string);
                     if(string.charAt(0) == 'W'){
-                        
+                        arq2.write(str);
+                        arq2.write(System.getProperty( "line.separator" ));
                     }
 
                 }catch(Exception e){
                     System.out.println(e.getMessage());
                 }       
             }
+
+            arq.close();
+            br.close();
+
+            arq2.close();
+            br2.close();
+
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -77,14 +89,12 @@ public class Interpretador {
                     tmp += str.charAt(i); 
                 }
                 else{
-                    tmp += mnemonicoHexa(string);
+                    tmp += mnemonicoHexa(string).charAt(0);
                 }
             }
         }
-
-        str = tmp;
-
-        return str;
+        
+        return tmp;
     }
 
     public static String mnemonicoHexa(String string){
@@ -92,70 +102,72 @@ public class Interpretador {
 
         switch(string){
 
-            case "An":
-                hexa += "0";
+            case "W=An;":
+                hexa += '0';
                 break;
 
-            case "nAoB":
-                hexa += "1";
+            case "W=nAoB;":
+                hexa += '1';
                 break;
 
-            case "AnB":
-                hexa += "2";
+            case "W=AnB;":
+                hexa += '2';
                 break;
 
-            case "zeroL":
-                hexa += "3";
+            case "W=zeroL;":
+                hexa += '3';
                 break;
 
-            case "nAeB":
-                hexa += "4";
+            case "W=nAeB;":
+                hexa += '4';
                 break;
 
-            case  "Bn":
-                hexa += "5";
+            case  "W=Bn;":
+                hexa += '5';
                 break;
 
-            case  "AxB":
-                hexa += "6";
+            case  "W=AxB;":
+                hexa += '6';
                 break;
 
-            case  "ABn":
-                hexa += "7";
+            case  "W=ABn;":
+                hexa += '7';
                 break;
 
-            case  "AnoB":
-                hexa += "8";
+            case  "W=AnoB;":
+                hexa += '8';
                 break;
 
-            case  "nAxB":
-                hexa += "9";
+            case  "W=nAxB;":
+                hexa += '9';
                 break;
 
-            case  "copiaB":
-                hexa += "A";
+            case  "W=copiaB;":
+                hexa += 'A';
                 break;
 
-            case  "AB":
-                hexa += "B";
+            case  "W=AB;":
+                hexa += 'B';
                 break;
 
-            case  "umL":
-                hexa += "C";
+            case  "W=umL;":
+                hexa += 'C';
                 break;
 
-            case  "AoBn":
-                hexa += "D";
+            case  "W=AoBn;":
+                hexa += 'D';
                 break;
 
-            case  "AoB":
-                hexa += "E";
+            case  "W=AoB;":
+                hexa += 'E';
                 break;
 
-            case  "copiaA":
-                hexa += "F";
+            case  "W=copiaA;":
+                hexa += 'F';
                 break;
         }
+
+        //System.out.println("hexa: " + hexa);
 
         return hexa;
     }
