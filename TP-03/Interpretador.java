@@ -4,6 +4,21 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 
+/*
+======  
+  PUC MINAS
+  
+  Curso: Computação - 02/2022
+  Disciplina: Arquitetura de Computadores II
+  
+  Professor: Romanelli Lodron Zuim
+  Atividade: Exercício Prático 03 - Exerc 01
+  
+  Alunos: Arthur Kazuo, Bernard Paes, Daniel Gomes e Hernane Velozo.
+  Belo Horizonte, 31/08/2022.
+======
+*/
+
 public class Interpretador {
 
     static String str="XXX";
@@ -22,11 +37,11 @@ public class Interpretador {
         
 
         try{
-            arq = new FileReader("testeula.ula");
+            arq = new FileReader("testeula.ula"); // abre o arquivo .ula para leitura
             br = new BufferedReader(arq);
 
-            arqW = new File("testeula.hex");
-            if(!arqW.exists()){
+            arqW = new File("testeula.hex"); // cria o arquivo .hex para escrita
+            if(!arqW.exists()){// caso o arquivo nao exista, cria um
                 arqW.createNewFile();
             }
 
@@ -35,11 +50,12 @@ public class Interpretador {
 
             br.readLine();
 
-            while(isFim(string = br.readLine())){
-                try{
+            while(isFim(string = br.readLine())){ /* checa toda linha para saber se o arquivo chegou ao fim e atribui a linha para uma string (caso nao seja o fim) 
+                                                        para que ela seja enviada para o metodo interpretar */ 
+                try{                                
                     str = interpretar(string);
-                    if(string.charAt(0) == 'W'){
-                        arq2.write(str);
+                    if(string.charAt(0) == 'W'){ //escreve o valor hexadecimal do mnemonico no arquivo .hex
+                        arq2.write(str); 
                         arq2.write(System.getProperty( "line.separator" ));
                     }
 
@@ -60,10 +76,17 @@ public class Interpretador {
     }
 
 
-    public static String interpretar(String string){
+    public static String interpretar(String string){ // interpreta as linhas do arquivo .ula e passa os valores para hexa, para o arquivo .hex
         String tmp="";
 
-        if(string.charAt(0) == 'X'){
+        /*
+         * caso o valor de x ou y precise ser alterado antes de ser atribuida uma nova operação, a string com os valores de x e y será 
+         * atualizada com o if e else if 
+         * 
+         * já o else atribuirá à string o valor hexa do menemonico 
+         */
+
+        if(string.charAt(0) == 'X'){ // faz o parsing, char por char, do valor de x
             for(int i=0; i<3; i++){
                 if(i != 0){
                     tmp += str.charAt(i); 
@@ -73,7 +96,7 @@ public class Interpretador {
                 }
             }
         }
-        else if(string.charAt(0) == 'Y'){
+        else if(string.charAt(0) == 'Y'){  // faz o parsing, char por char, do valor de y
             for(int i=0; i<3; i++){
                 if(i != 1){
                     tmp += str.charAt(i); 
@@ -89,7 +112,7 @@ public class Interpretador {
                     tmp += str.charAt(i); 
                 }
                 else{
-                    tmp += mnemonicoHexa(string).charAt(0);
+                    tmp += mnemonicoHexa(string).charAt(0); //transforma o mnemonico em hexa para o codigo .hex
                 }
             }
         }
@@ -97,10 +120,10 @@ public class Interpretador {
         return tmp;
     }
 
-    public static String mnemonicoHexa(String string){
+    public static String mnemonicoHexa(String string){ //transforma o mnemonico em hexa
         String hexa="";
 
-        switch(string){
+        switch(string){ //recebe a string com o mnemonico e faz o switch case para definir qual hexa retornar
 
             case "W=An;":
                 hexa += '0';
@@ -166,8 +189,6 @@ public class Interpretador {
                 hexa += 'F';
                 break;
         }
-
-        //System.out.println("hexa: " + hexa);
 
         return hexa;
     }
